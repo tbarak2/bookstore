@@ -2,11 +2,9 @@
 using BookStore.Factories;
 using BookStore.Interfaces;
 using BookStore.ListLoaders;
-using BookStore.Model;
 using BookStore.Repositroies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
 
@@ -16,24 +14,19 @@ namespace BookStore
     {
         static void Main(string[] args)
         {
-            var services = new ServiceCollection();
-               
+            var services = new ServiceCollection();               
             ConfigureServices(services);
             var serviceProvider = services.BuildServiceProvider();
-            //var service = serviceProvider.GetService<IDaoService>();
             var listService = serviceProvider.GetService<IListLoaderService>();
-            listService.LoadData();
-            //service.Connect();
-            //service.Insert(new Book
-            //{
-            //    Author = "James",
-            //    Description = "Some love story in the future",
-            //    Genre = "Scfi",
-            //    Id = "Md1",
-            //    Price = 2,
-            //    PublishDate = DateTime.Now,
-            //    Title = "The Best Book Ever"
-            //});
+
+            try
+            {
+                listService.LoadData();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private static void ConfigureServices(IServiceCollection services)
@@ -43,7 +36,6 @@ namespace BookStore
                 .AddJsonFile("appsettings.json", optional: false)
                 .AddEnvironmentVariables();
             IConfiguration Configuration = configuration.Build();
-           // var S = configuration.GetSection("ConnectionStrings");
             services.Configure<ConnectionDriver>(Configuration.GetSection("ConnectionStrings"));
             services.AddSingleton<IConfiguration>(Configuration);
 
@@ -56,16 +48,5 @@ namespace BookStore
                 .AddScoped<JsonListLoader>()
                 .AddScoped<IListLoader, JsonListLoader>(ll => ll.GetService<JsonListLoader>());
         }
-
-        //public Startup(IHostingEnvironment env)
-        //{
-        //    var builder = new ConfigurationBuilder()
-        //        .SetBasePath(env.ContentRootPath)
-        //        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-        //        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-        //        .AddEnvironmentVariables();
-
-        //   // Microsoft.Extensions.Configuration = builder.Build();
-        //}
     }
 }

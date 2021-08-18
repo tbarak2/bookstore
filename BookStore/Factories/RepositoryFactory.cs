@@ -1,13 +1,6 @@
 ﻿using BookStore.Interfaces;
-using BookStore.Model;
-using BookStore.Repositroies;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookStore.Factories
 {
@@ -24,7 +17,7 @@ namespace BookStore.Factories
 
         public IBookRepository CreateBookRepository()
         {
-            var connectionString = "BookStore.Repositroies." + _config.RepositoryType;//+_config.GetValue<string>("ConnectionStrings:RepositoryType");
+            var connectionString = "BookStore.Repositroies." + _config.RepositoryType;
             return (IBookRepository)_serviceProvider.GetService(Type.GetType(connectionString));
         }
     }

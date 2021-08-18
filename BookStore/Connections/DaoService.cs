@@ -1,12 +1,5 @@
 ﻿using BookStore.Interfaces;
 using BookStore.Model;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookStore.Connections
 {
@@ -14,16 +7,10 @@ namespace BookStore.Connections
     {
         private readonly IRepoistoryFactory _repoistoryFactory;
         private IBookRepository _bookRepository;
-        private readonly IOptions<ConnectionDriver> _config;
-        private readonly IConfiguration _configuraion;
 
-
-        public DaoService(IRepoistoryFactory repoistoryFactory, IOptions<ConnectionDriver> connectionDriver,IConfiguration configuraion)
+        public DaoService(IRepoistoryFactory repoistoryFactory)
         {
-            _configuraion = configuraion;
-            _config = connectionDriver;
-            _repoistoryFactory = repoistoryFactory;
-            
+            _repoistoryFactory = repoistoryFactory;            
         }
         public void Connect()
         {
@@ -39,7 +26,6 @@ namespace BookStore.Connections
         public int Insert(Book book)
         {
             return _bookRepository.Insert(book);
-
         }
     }
 }
